@@ -45,3 +45,53 @@ end
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins")
 require("keymaps")
+
+-- ============================================================
+-- VSCode-style autosave
+-- ============================================================
+-- Saves the current buffer automatically when:
+--   * you leave insert mode (Esc)               -> InsertLeave
+--   * you make a normal-mode edit (dd, p, r)    -> TextChanged
+--   * the terminal/window loses focus           -> FocusLost
+--   * you switch to another buffer              -> BufLeave
+-- Skipped silently for unnamed buffers, read-only buffers, special
+-- buftypes (terminal/quickfix/help), and files in /tmp.
+local autosave_group = vim.api.nvim_create_augroup("KanekiAutosave", { clear = true })
+
+local function should_autosave(buf)
+  if vim.bo[buf].readonly or not vim.bo[buf].modifiable then return false end
+  if vim.bo[buf].buftype ~= "" then return false end
+  local name = vim.api.nvim_buf_get_name(buf)
+  if name == "" then return false end
+  if name:match("^/tmp/") then return false end
+  if not vim.bo[buf].modified then return false end
+  return true
+end
+
+local function register_autosave()
+  vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged", "FocusLost", "BufLeave" }, {
+    group = autosave_group,
+    callback = function(args)
+      if should_autosave(args.buf) then
+        pcall(vim.api.nvim_buf_call, args.buf, function()
+          vim.cmd("silent! write")
+        end)
+      end
+    end,
+  })
+end
+
+register_autosave()
+vim.g.kaneki_autosave_on = true
+
+vim.api.nvim_create_user_command("AutosaveToggle", function()
+  if vim.g.kaneki_autosave_on then
+    vim.api.nvim_clear_autocmds({ group = autosave_group })
+    vim.g.kaneki_autosave_on = false
+    vim.notify("Autosave OFF", vim.log.levels.WARN)
+  else
+    register_autosave()
+    vim.g.kaneki_autosave_on = true
+    vim.notify("Autosave ON", vim.log.levels.INFO)
+  end
+end, { desc = "Toggle VSCode-style autosave" })

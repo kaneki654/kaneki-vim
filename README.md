@@ -7,6 +7,7 @@ VSCode-flavored Neovim distro for ChromeOS Crostini / Debian / Ubuntu.
 What you get:
 - AI ghost-text completion via Codestral (free Mistral API)
 - VSCode 1:1 keybindings (Ctrl+S save, Ctrl+P quick open, Ctrl+/ comment, etc.)
+- VSCode-style autosave (writes on InsertLeave / TextChanged / FocusLost / BufLeave)
 - Auto-pairs: `{`, `[`, `(`, `"`, `'` auto-double; Enter inside brackets expands to a centered indented block
 - 6 LSPs auto-installed: pyright, html-lsp, css-lsp, typescript-language-server, intelephense, clangd
 - ~600 themes (base16 collection + tinted-vim + 22 family plugins) with persistent theme picker
@@ -58,6 +59,16 @@ The installer will:
 | Theme picker (fuzzy) | `Space + t + c` |
 | Theme picker (cycle + save) | `Space + t + t` |
 | File tree | `Space + e` |
+
+## Autosave
+
+Files are written automatically when:
+- You leave insert mode (Esc)
+- You make a normal-mode edit (`dd`, `p`, `r`, etc.)
+- The terminal loses focus
+- You switch to another buffer
+
+Skipped for unnamed buffers, read-only files, special buffers (terminal, quickfix, help), and files in `/tmp`. Toggle on/off mid-session with `:AutosaveToggle`.
 
 ## Notes for terminal users
 

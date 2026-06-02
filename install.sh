@@ -157,5 +157,9 @@ else
   echo '      export CODESTRAL_API_KEY="your-key-here"'
 fi
 echo
+echo "  Autosave is ENABLED by default (VSCode style):"
+echo "    Files are written on InsertLeave / TextChanged / FocusLost / BufLeave."
+echo "    Toggle off mid-session with :AutosaveToggle."
+echo
 echo "  Backup of previous config (if any): ~/.config/nvim.bak.${TS}"
 echo
