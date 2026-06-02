@@ -2,6 +2,8 @@
 
 VSCode-flavored Neovim distro for ChromeOS Crostini / Debian / Ubuntu.
 
+![AI ghost-text completion and auto-suggestions demo](assets/demo.gif)
+
 What you get:
 - AI ghost-text completion via Codestral (free Mistral API)
 - VSCode 1:1 keybindings (Ctrl+S save, Ctrl+P quick open, Ctrl+/ comment, etc.)
